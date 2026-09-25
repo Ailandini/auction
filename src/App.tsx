@@ -23,10 +23,10 @@ export default function App() {
 			.finally(() => setLoading(false));
 	}, []);
 
-	const selectedListing = listings.find((l) => l.id === selectedId) ?? null;
+	const selectedListing = listings.find((listing) => listing.id === selectedId) ?? null;
 
 	const handleBidSuccess = (updated: Listing) => {
-		setListings((prev) => prev.map((l) => (l.id === updated.id ? updated : l)));
+		setListings((prev) => prev.map((listing) => (listing.id === updated.id ? updated : listing)));
 	};
 
 	const handleListingCreated = (listing: Listing) => {
