@@ -119,6 +119,77 @@ body {
 }
 
 /* ============================================================
+   Pager
+   ============================================================ */
+.pager {
+	position: sticky;
+	bottom: 0;
+	margin: auto -20px -20px;
+	padding: 10px 20px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+	background: #fff;
+	border-top: 1px solid #ddd;
+}
+
+.pager button {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #2596be;
+	background: none;
+	border: 1px solid #2596be;
+	border-radius: 5px;
+	padding: 3px 10px;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+}
+
+.pager button:hover:not(:disabled) {
+	background: #2596be;
+	color: #fff;
+}
+
+.pager button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.pager__status {
+	font-size: 0.85rem;
+	color: #555;
+}
+
+.pager__size {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+}
+
+.pager__size label {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #555;
+}
+
+.pager__size input {
+	width: 4.5rem;
+	padding: 3px 8px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 0.85rem;
+}
+
+.pager__error {
+	flex-basis: 100%;
+	font-size: 0.8rem;
+	color: #721c24;
+}
+
+/* ============================================================
    Listing card
    ============================================================ */
 .listing-card {
