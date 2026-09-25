@@ -3,25 +3,35 @@ import { getListings } from "./api/listings";
 import CreateListingForm from "./components/CreateListingForm";
 import ListingCard from "./components/ListingCard";
 import ListingDetail from "./components/ListingDetail";
+import { Pager } from "./components/Pager";
 import type { Listing } from "./types";
 
 export default function App() {
 	const [listings, setListings] = useState<Listing[]>([]);
+	const [page, setPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
+	const [totalPages, setTotalPages] = useState(1);
+	const [total, setTotal] = useState(0);
+	const [reloadKey, setReloadKey] = useState(0);
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 	const [showCreateForm, setShowCreateForm] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		getListings()
-			.then((data) => setListings(data.items))
+		getListings(page, pageSize)
+			.then((data) => {
+				setListings(data.items);
+				setTotalPages(data.totalPages);
+				setTotal(data.total);
+			})
 			.catch((err) =>
 				setError(
 					err instanceof Error ? err.message : "Failed to load listings",
 				),
 			)
 			.finally(() => setLoading(false));
-	}, []);
+	}, [page, pageSize, reloadKey]);
 
 	const selectedListing = listings.find((listing) => listing.id === selectedId) ?? null;
 
@@ -30,7 +40,8 @@ export default function App() {
 	};
 
 	const handleListingCreated = (listing: Listing) => {
-		setListings((prev) => [...prev, listing]);
+		setPage(Math.ceil((total + 1) / pageSize));
+		setReloadKey((key) => key + 1);
 		setSelectedId(listing.id);
 		setShowCreateForm(false);
 	};
@@ -71,6 +82,18 @@ export default function App() {
 								/>
 							))}
 						</div>
+					)}
+					{!loading && !error && (
+						<Pager
+							page={page}
+							totalPages={totalPages}
+							pageSize={pageSize}
+							onPageChange={setPage}
+							onPageSizeSubmit={(size) => {
+								setPageSize(size);
+								setPage(1);
+							}}
+						/>
 					)}
 				</aside>
 				<main className="panel panel--right">
