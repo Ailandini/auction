@@ -51,7 +51,7 @@ export default function BidForm({ listing, onBidSuccess }: Props) {
 					id="bidder"
 					name="bidder"
 					type="text"
-					placeholder="event.g. Jane Smith"
+					placeholder="e.g. Jane Smith"
 					disabled={submitting}
 				/>
 			</div>
@@ -61,7 +61,7 @@ export default function BidForm({ listing, onBidSuccess }: Props) {
 					id="amount"
 					name="amount"
 					type="number"
-					placeholder={`event.g. ${(listing.currentBid + 1_000).toLocaleString()}`}
+					placeholder={`e.g. ${(listing.currentBid + 1_000).toLocaleString()}`}
 					min={1}
 					step={1}
 					disabled={submitting}
