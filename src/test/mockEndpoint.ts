@@ -1,11 +1,16 @@
-import { HttpResponse, http } from "msw";
+import { HttpResponse, http, type JsonBodyType } from "msw";
 import { server } from "./server";
 
 interface MockEndpointConfig {
 	url: string;
-	body: unknown;
+	body: JsonBodyType;
+	method?: "get" | "post";
 }
 
-export function mockEndpoint({ url, body }: MockEndpointConfig): void {
-	server.use(http.get(url, () => HttpResponse.json(body)));
+export function mockEndpoint({
+	url,
+	body,
+	method = "get",
+}: MockEndpointConfig): void {
+	server.use(http[method](url, () => HttpResponse.json(body)));
 }
