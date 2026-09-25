@@ -1,8 +1,6 @@
 import cors from "cors";
-import express, { type Request, type Response } from "express";
-import { createListing, getListing, getListings } from "./routes";
-import { listings } from "./store";
-import type { BidRequest } from "./types";
+import express from "express";
+import { createListing, getListing, getListings, placeBid } from "./routes";
 
 const PORT = 3001;
 
@@ -25,45 +23,7 @@ app.post("/api/listings", createListing);
 app.get("/api/listings/:id", getListing);
 
 // POST /api/listings/:id/bids
-app.post("/api/listings/:id/bids", (req: Request, res: Response) => {
-	const listing = listings.find((l) => l.id === req.params.id);
-	if (!listing) {
-		return res.status(404).json({ error: "Listing not found" });
-	}
-
-	if (listing.status !== "active") {
-		return res
-			.status(400)
-			.json({ error: "This listing is not currently active" });
-	}
-
-	const bid = req.body as BidRequest;
-
-	if (
-		!bid.bidder ||
-		typeof bid.bidder !== "string" ||
-		bid.bidder.trim() === ""
-	) {
-		return res.status(400).json({ error: "Bidder name is required" });
-	}
-
-	if (typeof bid.amount !== "number" || isNaN(bid.amount) || bid.amount <= 0) {
-		return res
-			.status(400)
-			.json({ error: "Bid amount must be a positive number" });
-	}
-
-	if (bid.amount <= listing.currentBid) {
-		return res.status(400).json({
-			error: `Bid must be greater than the current bid of $${listing.currentBid.toLocaleString()}`,
-		});
-	}
-
-	listing.currentBid = bid.amount;
-	listing.currentBidder = bid.bidder.trim();
-
-	return res.status(201).json(listing);
-});
+app.post("/api/listings/:id/bids", placeBid);
 
 app.listen(PORT, () => {
 	console.log(`Server running at http://localhost:${PORT}`);
