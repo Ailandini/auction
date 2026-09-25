@@ -5,12 +5,80 @@ import { createResponse } from "./createResponse";
 import { createListing, getListings } from "./listings";
 
 describe("GET /api/listings", () => {
-	it("responds with every listing in the store", () => {
+	it("responds with the first page of 10 listings by default", () => {
 		const res = createResponse();
 
-		getListings({} as Request, res);
+		getListings({ query: {} } as Request, res);
 
-		expect(res.json).toHaveBeenCalledWith(listings);
+		expect(res.json).toHaveBeenCalledWith({
+			items: listings.slice(0, 10),
+			total: listings.length,
+			page: 1,
+			pageSize: 10,
+			totalPages: Math.ceil(listings.length / 10),
+		});
+	});
+
+	it("responds with the requested page", () => {
+		const res = createResponse();
+
+		getListings({ query: { page: "2" } } as unknown as Request, res);
+
+		expect(res.json).toHaveBeenCalledWith(
+			expect.objectContaining({ items: listings.slice(10, 20), page: 2 }),
+		);
+	});
+
+	it("responds with the requested page size", () => {
+		const res = createResponse();
+
+		getListings({ query: { pageSize: "15" } } as unknown as Request, res);
+
+		expect(res.json).toHaveBeenCalledWith({
+			items: listings.slice(0, 15),
+			total: listings.length,
+			page: 1,
+			pageSize: 15,
+			totalPages: Math.ceil(listings.length / 15),
+		});
+	});
+
+	it.each(["0", "-1", "abc", "1.5", ""])(
+		"rejects the page %j",
+		(page) => {
+			const res = createResponse();
+
+			getListings({ query: { page } } as unknown as Request, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.json).toHaveBeenCalledWith({
+				error: "page must be a whole number of at least 1",
+			});
+		},
+	);
+
+	it.each(["0", "-5", "abc", "2.5", "", "101"])(
+		"rejects the pageSize %j",
+		(pageSize) => {
+			const res = createResponse();
+
+			getListings({ query: { pageSize } } as unknown as Request, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.json).toHaveBeenCalledWith({
+				error: "pageSize must be a whole number from 1 to 100",
+			});
+		},
+	);
+
+	it("accepts the largest allowed pageSize", () => {
+		const res = createResponse();
+
+		getListings({ query: { pageSize: "100" } } as unknown as Request, res);
+
+		expect(res.json).toHaveBeenCalledWith(
+			expect.objectContaining({ pageSize: 100 }),
+		);
 	});
 });
 
