@@ -1,6 +1,6 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
-import { createListing, getListings } from "./routes";
+import { createListing, getListing, getListings } from "./routes";
 import { listings } from "./store";
 import type { BidRequest } from "./types";
 
@@ -22,13 +22,7 @@ app.get("/api/listings", getListings);
 app.post("/api/listings", createListing);
 
 // GET /api/listings/:id
-app.get("/api/listings/:id", (req: Request, res: Response) => {
-	const listing = listings.find((l) => l.id === req.params.id);
-	if (!listing) {
-		return res.status(404).json({ error: "Listing not found" });
-	}
-	return res.json(listing);
-});
+app.get("/api/listings/:id", getListing);
 
 // POST /api/listings/:id/bids
 app.post("/api/listings/:id/bids", (req: Request, res: Response) => {

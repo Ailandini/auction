@@ -1,6 +1,7 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { listings } from "../store";
+import { createResponse } from "./createResponse";
 import { createListing, getListings } from "./listings";
 
 describe("GET /api/listings", () => {
@@ -84,10 +85,3 @@ describe("POST /api/listings", () => {
 		expect(listings.at(-1)?.title).toBe("Old Plow");
 	});
 });
-
-function createResponse() {
-	return {
-		json: vi.fn(),
-		status: vi.fn().mockReturnThis(),
-	} as unknown as Response;
-}
