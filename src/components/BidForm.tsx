@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { placeBid } from "../api/listings";
+import { placeBid } from "../api/bids";
 import type { Listing } from "../types";
 
 interface Props {

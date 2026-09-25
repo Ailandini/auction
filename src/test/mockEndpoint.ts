@@ -6,6 +6,7 @@ interface MockEndpointConfig {
 	body: JsonBodyType;
 	method?: "get" | "post";
 	searchParams?: Record<string, string>;
+	status?: number;
 }
 
 export function mockEndpoint({
@@ -13,11 +14,12 @@ export function mockEndpoint({
 	body,
 	method = "get",
 	searchParams = {},
+	status = 200,
 }: MockEndpointConfig): void {
 	server.use(
 		http[method](url, ({ request }) => {
 			if (!hasSearchParams(request, searchParams)) return;
-			return HttpResponse.json(body);
+			return HttpResponse.json(body, { status });
 		}),
 	);
 }
