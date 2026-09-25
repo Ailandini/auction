@@ -106,6 +106,28 @@ describe("POST /api/listings/:id/bids", () => {
 			error: `Bid must be greater than the current bid of $${(1500).toLocaleString()}`,
 		});
 	});
+
+	it("records a winning bid and the trimmed bidder on the listing", () => {
+		const listing = addListing({ currentBid: 1500 });
+
+		placeBid(
+			bidRequest(listing.id, { bidder: "  Sam  ", amount: 1600 }),
+			createResponse(),
+		);
+
+		expect(listing.currentBid).toBe(1600);
+		expect(listing.currentBidder).toBe("Sam");
+	});
+
+	it("responds 201 with the updated listing", () => {
+		const res = createResponse();
+		const listing = addListing({ currentBid: 1500 });
+
+		placeBid(bidRequest(listing.id, { bidder: "Sam", amount: 1600 }), res);
+
+		expect(res.status).toHaveBeenCalledWith(201);
+		expect(res.json).toHaveBeenCalledWith(listing);
+	});
 });
 
 function bidRequest(id: string, body: Partial<BidRequest>) {

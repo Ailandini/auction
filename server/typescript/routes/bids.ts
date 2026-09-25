@@ -35,7 +35,7 @@ export function placeBid(req: Request, res: Response): void {
 		return;
 	}
 
-	if (bid.amount >= listing.currentBid) {
+	if (bid.amount <= listing.currentBid) {
 		res.status(400).json({
 			error: `Bid must be greater than the current bid of $${listing.currentBid.toLocaleString()}`,
 		});
