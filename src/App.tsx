@@ -14,7 +14,7 @@ export default function App() {
 
 	useEffect(() => {
 		getListings()
-			.then((data) => setListings(data))
+			.then((data) => setListings(data.items))
 			.catch((err) =>
 				setError(
 					err instanceof Error ? err.message : "Failed to load listings",
