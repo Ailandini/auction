@@ -29,10 +29,11 @@ export default function BidForm({ listing, onBidSuccess }: Props) {
 		}
 
 		setSubmitting(true);
-		try {
+    try {
+      const form = event.currentTarget;
 			const updated = await placeBid(listing.id, bidder, numAmount);
 			onBidSuccess(updated);
-			event.currentTarget.reset();
+			form.reset();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "Failed to place bid");
 		} finally {
