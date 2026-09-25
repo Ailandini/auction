@@ -67,6 +67,7 @@ body {
 }
 
 .panel--left {
+	padding-top: 0;
 	padding-bottom: 0;
 	width: 40%;
 	border-right: 1px solid #ddd;
@@ -79,10 +80,16 @@ body {
 }
 
 .panel__heading-row {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 16px;
+	margin: 0 -20px 16px;
+	padding: 20px 20px 12px;
+	background: #fff;
+	border-bottom: 1px solid #ddd;
 }
 
 .panel__heading {
