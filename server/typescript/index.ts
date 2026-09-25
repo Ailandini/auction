@@ -1,6 +1,12 @@
 import cors from "cors";
 import express from "express";
-import { createListing, getListing, getListings, placeBid } from "./routes";
+import {
+	createListing,
+	getBids,
+	getListing,
+	getListings,
+	placeBid,
+} from "./routes";
 
 const PORT = 3001;
 
@@ -24,6 +30,9 @@ app.get("/api/listings/:id", getListing);
 
 // POST /api/listings/:id/bids
 app.post("/api/listings/:id/bids", placeBid);
+
+// GET /api/listings/:id/bids
+app.get("/api/listings/:id/bids", getBids);
 
 app.listen(PORT, () => {
 	console.log(`Server running at http://localhost:${PORT}`);

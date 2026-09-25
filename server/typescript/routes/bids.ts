@@ -1,9 +1,16 @@
 import type { Request, Response } from "express";
-import { listings } from "../store";
+import { bids, listings } from "../store";
 
 export interface BidRequest {
 	bidder: string;
 	amount: number;
+}
+
+export interface Bid {
+	listingId: string;
+	bidder: string;
+	amount: number;
+	placedAt: string;
 }
 
 export function placeBid(req: Request, res: Response): void {
@@ -44,6 +51,23 @@ export function placeBid(req: Request, res: Response): void {
 
 	listing.currentBid = bid.amount;
 	listing.currentBidder = bid.bidder.trim();
+	bids.push({
+		listingId: listing.id,
+		bidder: listing.currentBidder,
+		amount: bid.amount,
+		placedAt: new Date().toISOString(),
+	});
 
 	res.status(201).json(listing);
+}
+
+export function getBids(req: Request, res: Response): void {
+	const listing = listings.find((l) => l.id === req.params.id);
+
+	if (!listing) {
+		res.status(404).json({ error: "Listing not found" });
+		return;
+	}
+
+	res.json(bids.filter((bid) => bid.listingId === listing.id).reverse());
 }

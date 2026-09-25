@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import type { Request } from "express";
 import { describe, expect, it } from "vitest";
-import { listings } from "../store";
-import { type BidRequest, placeBid } from "./bids";
+import { bids, listings } from "../store";
+import { type BidRequest, getBids, placeBid } from "./bids";
 import { createResponse } from "./createResponse";
 import type { Listing } from "./listings";
 
@@ -119,6 +119,22 @@ describe("POST /api/listings/:id/bids", () => {
 		expect(listing.currentBidder).toBe("Sam");
 	});
 
+	it("records a winning bid in the bid history", () => {
+		const listing = addListing({ currentBid: 1500 });
+
+		placeBid(
+			bidRequest(listing.id, { bidder: "  Sam  ", amount: 1600 }),
+			createResponse(),
+		);
+
+		expect(bids).toContainEqual({
+			listingId: listing.id,
+			bidder: "Sam",
+			amount: 1600,
+			placedAt: expect.any(String),
+		});
+	});
+
 	it("responds 201 with the updated listing", () => {
 		const res = createResponse();
 		const listing = addListing({ currentBid: 1500 });
@@ -127,6 +143,33 @@ describe("POST /api/listings/:id/bids", () => {
 
 		expect(res.status).toHaveBeenCalledWith(201);
 		expect(res.json).toHaveBeenCalledWith(listing);
+	});
+});
+
+describe("GET /api/listings/:id/bids", () => {
+	it("responds 404 when no listing has that id", () => {
+		const res = createResponse();
+
+		getBids({ params: { id: "missing" } } as unknown as Request, res);
+
+		expect(res.status).toHaveBeenCalledWith(404);
+		expect(res.json).toHaveBeenCalledWith({ error: "Listing not found" });
+	});
+
+	it("responds with only that listing's bids, newest first", () => {
+		const res = createResponse();
+		const listing = addListing({ currentBid: 100 });
+		const otherListing = addListing({ currentBid: 100 });
+		placeBid(bidRequest(listing.id, { bidder: "Ann", amount: 110 }), createResponse());
+		placeBid(bidRequest(otherListing.id, { bidder: "Bob", amount: 120 }), createResponse());
+		placeBid(bidRequest(listing.id, { bidder: "Cy", amount: 130 }), createResponse());
+
+		getBids({ params: { id: listing.id } } as unknown as Request, res);
+
+		expect(res.json).toHaveBeenCalledWith([
+			expect.objectContaining({ bidder: "Cy", amount: 130 }),
+			expect.objectContaining({ bidder: "Ann", amount: 110 }),
+		]);
 	});
 });
 
