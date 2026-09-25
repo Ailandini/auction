@@ -1,1 +1,2 @@
-export { getListings } from "./listings";
+export type { Listing } from "./listings";
+export { createListing, getListings } from "./listings";

@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import type { Listing } from "./types";
+import type { Listing } from "./routes";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

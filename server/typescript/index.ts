@@ -1,9 +1,8 @@
-import { randomUUID } from "crypto";
 import cors from "cors";
 import express, { type Request, type Response } from "express";
-import { getListings } from "./routes";
+import { createListing, getListings } from "./routes";
 import { listings } from "./store";
-import type { BidRequest, CreateListingRequest, Listing } from "./types";
+import type { BidRequest } from "./types";
 
 const PORT = 3001;
 
@@ -20,29 +19,7 @@ app.use(express.json());
 app.get("/api/listings", getListings);
 
 // POST /api/listings
-app.post("/api/listings", (req: Request, res: Response) => {
-	const { title } = req.body as CreateListingRequest;
-
-	if (!title || typeof title !== "string" || title.trim() === "") {
-		return res.status(400).json({ error: "Title is required" });
-	}
-
-	const listing: Listing = {
-		id: randomUUID(),
-		title: title.trim(),
-		description: "",
-		category: "implement",
-		startingPrice: 0,
-		currentBid: 0,
-		currentBidder: null,
-		status: "active",
-		endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-		imageUrl: "",
-	};
-
-	listings.push(listing);
-	return res.status(201).json(listing);
-});
+app.post("/api/listings", createListing);
 
 // GET /api/listings/:id
 app.get("/api/listings/:id", (req: Request, res: Response) => {
