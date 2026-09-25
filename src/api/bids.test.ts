@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { mockEndpoint } from "../test/mockEndpoint";
 import { server } from "../test/server";
 import type { Listing } from "../types";
-import { placeBid } from "./bids";
+import { getBids, placeBid } from "./bids";
 
 const listing: Listing = {
 	id: "listing-1",
@@ -17,6 +17,34 @@ const listing: Listing = {
 	endsAt: "2030-01-01T00:00:00.000Z",
 	imageUrl: "",
 };
+
+describe("getBids", () => {
+	it("returns the bid history for the listing", async () => {
+		const bid = {
+			listingId: "listing-1",
+			bidder: "Sam",
+			amount: 2000,
+			placedAt: "2026-09-25T04:10:07.289Z",
+		};
+		mockEndpoint({ url: "/api/listings/listing-1/bids", body: [bid] });
+
+		const result = await getBids("listing-1");
+
+		expect(result).toEqual([bid]);
+	});
+
+	it("throws when the bid history cannot be loaded", async () => {
+		mockEndpoint({
+			url: "/api/listings/listing-1/bids",
+			status: 404,
+			body: { error: "Listing not found" },
+		});
+
+		await expect(getBids("listing-1")).rejects.toThrow(
+			"Failed to fetch bids",
+		);
+	});
+});
 
 describe("placeBid", () => {
 	it("posts the bid and returns the updated listing", async () => {

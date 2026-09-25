@@ -16,3 +16,16 @@ export async function placeBid(
 	}
 	return res.json();
 }
+
+export interface Bid {
+	listingId: string;
+	bidder: string;
+	amount: number;
+	placedAt: string;
+}
+
+export async function getBids(listingId: string): Promise<Bid[]> {
+	const res = await fetch(`/api/listings/${listingId}/bids`);
+	if (!res.ok) throw new Error("Failed to fetch bids");
+	return res.json();
+}
