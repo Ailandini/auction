@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type SubmitEvent, useState } from "react";
 
 export interface PagerProps {
 	page: number;
@@ -20,24 +20,26 @@ export function Pager({
 	const [sizeError, setSizeError] = useState<string | null>(null);
 
 	return (
-		<nav className="pager">
-			<button
-				type="button"
-				disabled={page <= 1}
-				onClick={() => onPageChange(page - 1)}
-			>
-				Previous
-			</button>
-			<span className="pager__status">
-				Page {page} of {totalPages}
-			</span>
-			<button
-				type="button"
-				disabled={page >= totalPages}
-				onClick={() => onPageChange(page + 1)}
-			>
-				Next
-			</button>
+    <nav className="pager">
+      <span className="pager__nav">
+  			<button
+  				type="button"
+  				disabled={page <= 1}
+  				onClick={() => onPageChange(page - 1)}
+  			>
+  				Previous
+  			</button>
+  			<span className="pager__status">
+  				Page {page} of {totalPages}
+  			</span>
+   			<button
+    				type="button"
+    				disabled={page >= totalPages}
+    				onClick={() => onPageChange(page + 1)}
+   			>
+          Next
+        </button>
+      </span>
 			<form className="pager__size" onSubmit={handleSizeSubmit} noValidate>
 				<label htmlFor="page-size">Per page</label>
 				<input
@@ -52,7 +54,7 @@ export function Pager({
 		</nav>
 	);
 
-	function handleSizeSubmit(event: FormEvent<HTMLFormElement>) {
+	function handleSizeSubmit(event: SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
 		const size = Number(data.get("pageSize"));
