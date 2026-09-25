@@ -1,4 +1,5 @@
 import BidForm from "./BidForm";
+import { BidHistory } from "./BidHistory";
 import type { Listing } from "../types";
 
 interface Props {
@@ -59,6 +60,8 @@ export default function ListingDetail({ listing, onBidSuccess }: Props) {
 					<span className="meta-value">{formatDate(listing.endsAt)}</span>
 				</div>
 			</div>
+
+			<BidHistory listingId={listing.id} currentBid={listing.currentBid} />
 
 			{listing.status === "active" && (
 				<BidForm listing={listing} onBidSuccess={onBidSuccess} />

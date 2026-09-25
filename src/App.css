@@ -385,6 +385,46 @@ body {
 	border-bottom: none;
 }
 
+.bid-history {
+	margin-bottom: 24px;
+}
+
+.bid-history__title {
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #555;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	margin-bottom: 8px;
+}
+
+.bid-history__list {
+	list-style: none;
+	border: 1px solid #e5e5e5;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.bid-history__list:empty {
+	display: none;
+}
+
+.bid-history__item {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 16px;
+	border-bottom: 1px solid #e5e5e5;
+	font-size: 0.9rem;
+}
+
+.bid-history__item:last-child {
+	border-bottom: none;
+}
+
+.bid-history__amount {
+	font-weight: 700;
+}
+
 .meta-label {
 	font-size: 0.8rem;
 	color: #888;
