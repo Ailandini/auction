@@ -67,8 +67,7 @@ body {
 }
 
 .panel--left {
-	padding-top: 0;
-	padding-bottom: 0;
+	overflow-y: hidden;
 	width: 40%;
 	border-right: 1px solid #ddd;
 	background: #fff;
@@ -80,15 +79,12 @@ body {
 }
 
 .panel__heading-row {
-	position: sticky;
-	top: 0;
-	z-index: 1;
+	flex-shrink: 0;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin: 0 -20px 16px;
-	padding: 20px 20px 12px;
-	background: #fff;
+	margin: 0 -20px;
+	padding: 0 20px 12px;
 	border-bottom: 1px solid #ddd;
 }
 
@@ -124,16 +120,21 @@ body {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 	gap: 12px;
-	margin-bottom: 16px;
+	grid-auto-rows: max-content;
+	align-content: start;
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	margin: 0 -20px;
+	padding: 16px 20px;
 }
 
 /* ============================================================
    Pager
    ============================================================ */
 .pager {
-	position: sticky;
-	bottom: 0;
-	margin: auto -20px 0;
+	flex-shrink: 0;
+	margin: 0 -20px -20px;
 	padding: 10px 20px;
 	display: flex;
 	flex-wrap: wrap;
